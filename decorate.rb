@@ -1,13 +1,13 @@
-require_relative './nameable'
+require './nameable'
 
 
 class Decorator
   include Nameable
-  attr_accessor :nameable, :age
 
-  def initialize(nameable, age)
+
+  def initialize(nameable)
+    super()
     @nameable = nameable
-    @age = age
   end
 
   def correct_name
@@ -17,12 +17,12 @@ end
 
 class CapitalizeDecorator < Decorator
   def correct_name
-    @nameable.correct_name.capitalize
+    super.capitalize
   end
 end
 
 class TrimmerDecorator < Decorator
   def correct_name
-    @nameable.correct_name.slice(0, 10)
+    super.slice(0, 10)
   end
 end
