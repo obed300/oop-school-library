@@ -1,9 +1,7 @@
 require './nameable'
 
-
 class Decorator
   include Nameable
-
 
   def initialize(nameable)
     super()
