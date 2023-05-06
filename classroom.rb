@@ -1,14 +1,14 @@
-require './student'
 class Classroom
-  attr_accessor :label, :student
+  attr_accessor :label
+  attr_reader :students
 
-  def initialize(label, _students)
+  def initialize(label)
     @label = label
     @students = []
   end
 
   def add_student(student)
+    @students.push(student)
     student.classroom = self
-    @students << student
   end
 end

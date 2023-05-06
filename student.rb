@@ -1,26 +1,23 @@
 require './person'
-class Student < Person
-  attr_accessor :classroom, :parent_permission
 
-  @students = []
-  def initialize(age, parent_permission, name = 'Unknown')
+# Class Student inherits from Person
+class Student < Person
+  attr_accessor :classroom
+
+  def initialize(age, name, parent_permission, classroom)
     super(age, name, parent_permission: parent_permission)
+
+    @classroom = classroom
   end
 
   def play_hooky
     '¯(ツ)/¯'
   end
 
-  def make_student
-    self.class.all << self
-  end
-
-  def self.all
-    @students
-  end
-
-  def classrooms=(classroom)
-    @classroom = classroom
+  def class=(classroom)
+    @class = classroom
     classroom.students.push(self) unless classroom.students.include?(self)
   end
 end
+
+puts Student.new(30, 'ABC', false, 'C1').name
