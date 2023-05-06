@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 require './book'
 require './classroom'
 require './nameable'
