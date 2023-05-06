@@ -18,13 +18,15 @@ class App
     puts '1 - List all books', '2 - List all people', '3 - Create a person', '4 - Create a book',
          '5 - Create a rental', '6 - List all rentals for a given person id', '7 - Exit'
     @choice = gets.chomp
-    puts @choice
-    if @choice.to_i != 0 && @choice.to_i.between?(1, 6)
+
+    if @choice.upcase == '7'
+      puts 'Goodbye!'
+    elsif @choice.to_i != 0 && @choice.to_i.between?(1, 6)
+      sleep(1)
       enter_menu
-    elsif @choice.to_i == 7
-      puts 'Thank you for using this app!'
     else
-      options
+      puts 'Please choose a valid option!'
+      puts # blank
     end
   end
 
