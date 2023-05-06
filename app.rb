@@ -5,7 +5,6 @@ require './rental'
 require './teacher'
 require './student'
 
-
 class App
   def start
     puts 'Welcome to School Library App!'
@@ -18,7 +17,6 @@ class App
     puts 'Please choose an option by enterin a number:'
     puts '1 - List all books', '2 - List all people', '3 - Create a person', '4 - Create a book',
          '5 - Create a rental', '6 - List all rentals for a given person id', '7 - Exit'
-
     @choice = gets.chomp
     puts @choice
     if @choice.to_i != 0 && @choice.to_i.between?(1, 6)

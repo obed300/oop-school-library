@@ -1,6 +1,4 @@
-#!C:/Ruby/bin/ruby.exe
 require './student'
-
 class Classroom
   attr_accessor :label, :student
 
