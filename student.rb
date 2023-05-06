@@ -1,12 +1,8 @@
 require './person'
-
-
 class Student < Person
   attr_accessor :classroom, :parent_permission
 
   @students = []
-
-
   def initialize(age, parent_permission, name = 'Unknown')
     super(age, name, parent_permission: parent_permission)
   end
