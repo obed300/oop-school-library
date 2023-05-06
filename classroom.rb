@@ -1,3 +1,4 @@
+#!C:/Ruby/bin/ruby.exe
 require './student'
 
 class Classroom
@@ -13,8 +14,3 @@ class Classroom
     @students << student
   end
 end
-
-classroom = Classroom.new('math')
-student = Student.new('obed')
-
-classroom.add_student(student)

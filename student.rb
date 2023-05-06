@@ -1,11 +1,26 @@
 require './person'
-require './classroom'
+
 
 class Student < Person
-  attr_reader :classroom
+  attr_accessor :classroom, :parent_permission
+
+  @students = []
+
+
+  def initialize(age, parent_permission, name = 'Unknown')
+    super(age, name, parent_permission: parent_permission)
+  end
 
   def play_hooky
     '¯(ツ)/¯'
+  end
+
+  def make_student
+    self.class.all << self
+  end
+
+  def self.all
+    @students
   end
 
   def classrooms=(classroom)
