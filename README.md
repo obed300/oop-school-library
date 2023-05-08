@@ -33,7 +33,7 @@
 
 # 📖 OOP-SCHOOL-LIBRARY <a name="about-project"></a>
 
-**OOP-SCHOOL-LIBRARY** is a project that aims to develop a tool for the librarian of OOP University to manage the library's collection of books, record borrowing activities, and add new students or teachers in a well-organized and visually appealing way.
+**OOP-SCHOOL-LIBRARY** is a project that aims to develop a tool for the librarian of OOP University to manage the library's collection of books, record borrowing activities, and add new students or teachers in a well-organized and visually appealing ways.
 
 ## 🛠 Built With <a name="built-with"></a>
 
