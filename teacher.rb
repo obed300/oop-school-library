@@ -1,9 +1,11 @@
-require './student'
 require './person'
 
 class Teacher < Person
-  def initialize(specialization, age)
-    super(age)
+  attr_accessor :parent_permission
+
+  def initialize(specialization, age, name, parent_permission)
+    super(age, name, parent_permission: parent_permission)
+
     @specialization = specialization
   end
 
