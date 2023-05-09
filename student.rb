@@ -1,6 +1,5 @@
 require './person'
 
-# Class Student inherits from Person
 class Student < Person
   attr_accessor :classroom
 
