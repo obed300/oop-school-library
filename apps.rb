@@ -5,6 +5,9 @@ require './book'
 require './input_module'
 require './classroom'
 require './rental'
+require './storage/reserve'
+require 'json'
+
 
 class App
   def initialize
@@ -16,36 +19,6 @@ class App
 
   include InputModule
 
-  def display_options
-    "
-1 - List all books
-2 - List all people
-3 - Create a person
-4 - Create a book
-5 - Create a rental
-6 - List all rentals for a given person id
-7 - Exit
-Please choose an option by entering a number between 1 and 7: "
-  end
-
-  def options(input)
-    case input
-    when 1
-      list_books
-    when 2
-      print_person
-    when 3
-      add_person
-    when 4
-      create_book
-    when 5
-      create_rental
-    when 6
-      list_rentals
-    else
-      puts 'You put the wrong input. Please enter a number between 1 and 7.'
-    end
-  end
 
   def act_regarding_input
     loop do
@@ -75,21 +48,82 @@ Please choose an option by entering a number between 1 and 7: "
     else
       print 'Specialization: '
       specialization = gets.chomp
-      new_person = Teacher.new(specialization, age, name, @parent_permission)
+      new_person = Teacher.new(specialization, age, name)
     end
 
     @persons << new_person
+    write_data(@persons, './storage/person.json')
 
     puts 'Person created successfully'
-    print @persons
   end
 
+  # def add_person
+  #   puts 'Do you want to create a student (1) or a teacher (2) [Input the number]: '
+  #   number = gets.chomp.to_i
+  #   puts 'Name: '
+  #   name = gets.chomp
+  #   puts 'Age: '
+  #   age = gets.chomp.to_i
+  #   if number == 1
+  #     create_student(name, age)
+  #   elsif number == 2
+  #     create_teacher(name, age)
+  #   else
+  #     puts 'Invalid input'
+  #   end
+  # end
+
+  # Create new student
+  # def create_student(name, age)
+  #   puts 'Has parent permission? [Y/N]'
+  #   permission = gets.chomp.upcase == 'Y'
+
+  #   @persons.push Student.new(age, name, permission, @classroom)
+  #   write_data(@persons, './storage/person.json')
+  #   puts 'Student created successfully'
+  # end
+
+  # # Create new teacher
+  # def create_teacher(name, age, _classroom)
+  #   puts 'Specialization: '
+  #   specialization = gets.chomp
+
+  #   @persons.push Teacher.new(name, age, specialization)
+  #   write_data(@persons, './storage/person.json')
+  #   puts 'Teacher created successfully'
+  # end
+
+  # def print_person
+  #   @persons = read_data('./storage/person.json')
+  #   puts 'There are no people in the list' if @persons.empty?
+  #   @persons.each_with_index do |person, index|
+  #     puts "#{index} - #{person['class']} Name: #{person['name']}, ID: #{person['id']}, Age: #{person['age']}"
+  #   end
+  # end
   def print_person
-    puts 'People list is empty! Add a person.' if @persons.empty?
-    @persons.map do |person|
-      p "#{person.class.name} Name: #{person.name}, Age: #{person.age}, id: #{person.id}"
+    json_data = read_data('./storage/person.json')
+    @persons = JSON.parse(json_data)
+
+    @persons.each_with_index do |person, index|
+      if person.key?('specialization')
+        puts "#{index} - [Teacher] Name: #{person['name']}, ID: #{person['id']}, Age: #{person['age']}"
+      else
+        puts "#{index} - [Student] Name: #{person['name']}, ID: #{person['id']}, Age: #{person['age']}"
+      end
     end
   end
+
+
+  # def print_person
+  #   @persons = read_data('./storage/person.json')
+  #   @persons.each do |person|
+  #     if person.is_a?(Student)
+  #       puts "Student Name: #{person.name}, Age: #{person.age}, id: #{person.id}"
+  #     elsif person.is_a?(Teacher)
+  #       puts "Teacher Name: #{person.name}, Age: #{person.age}, id: #{person.id}"
+  #     end
+  #   end
+  # end
 
   def create_book
     print 'Title: '
@@ -98,13 +132,17 @@ Please choose an option by entering a number between 1 and 7: "
     author = gets.chomp
     book = Book.new(title, author)
     @books << book
+
+    write_data(@books, './storage/book.json')
     print 'Book created successfully'
   end
 
   def list_books
+    json_data = read_data('./storage/book.json')
+    @books = JSON.parse(json_data)
     puts 'Book list is empty! Add a book.' if @books.empty?
     @books.map do |book|
-      puts %(Title: "#{book.title}", Author: #{book.author})
+      puts %(Title: "#{book['title']}", Author: #{book['author']})
     end
   end
 
@@ -122,10 +160,13 @@ Please choose an option by entering a number between 1 and 7: "
     date = gets.chomp.to_i
 
     @rentals << Rental.new(date, @books[book_index], @persons[person_index])
+    write_data(@rentals, './storage/rental.json')
     puts 'Rental created sucessfully'
   end
 
   def list_rentals
+    json_data = read_data('./storage/rental.json')
+    @rentals = JSON.parse(json_data)
     puts "\n"
     if @rentals.empty?
       puts 'No rent is registered in the library'

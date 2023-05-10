@@ -17,4 +17,12 @@ class Rental
     @person = person
     person.rentals.push(self) unless person.rental.includes?(self)
   end
+
+  def to_h
+    {
+      date: @date,
+      book: @book,
+      person: @person
+    }
+  end
 end

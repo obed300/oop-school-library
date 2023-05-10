@@ -11,4 +11,12 @@ class Book
     @rentals.push(rental)
     rental.book = self
   end
+
+  def to_h
+    {
+      title: @title,
+      author: @author,
+      rentals: @rentals
+    }
+  end
 end

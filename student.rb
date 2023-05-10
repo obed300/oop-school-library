@@ -17,4 +17,14 @@ class Student < Person
     @class = classroom
     classroom.students.push(self) unless classroom.students.include?(self)
   end
+
+  def to_h
+    {
+      id: @id,
+      name: @name,
+      age: @age,
+      parent_permission: @parent_permission,
+      rentals: @rentals
+    }
+  end
 end
