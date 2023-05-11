@@ -57,49 +57,6 @@ class App
     puts 'Person created successfully'
   end
 
-  # def add_person
-  #   puts 'Do you want to create a student (1) or a teacher (2) [Input the number]: '
-  #   number = gets.chomp.to_i
-  #   puts 'Name: '
-  #   name = gets.chomp
-  #   puts 'Age: '
-  #   age = gets.chomp.to_i
-  #   if number == 1
-  #     create_student(name, age)
-  #   elsif number == 2
-  #     create_teacher(name, age)
-  #   else
-  #     puts 'Invalid input'
-  #   end
-  # end
-
-  # Create new student
-  # def create_student(name, age)
-  #   puts 'Has parent permission? [Y/N]'
-  #   permission = gets.chomp.upcase == 'Y'
-
-  #   @persons.push Student.new(age, name, permission, @classroom)
-  #   write_data(@persons, './storage/person.json')
-  #   puts 'Student created successfully'
-  # end
-
-  # # Create new teacher
-  # def create_teacher(name, age, _classroom)
-  #   puts 'Specialization: '
-  #   specialization = gets.chomp
-
-  #   @persons.push Teacher.new(name, age, specialization)
-  #   write_data(@persons, './storage/person.json')
-  #   puts 'Teacher created successfully'
-  # end
-
-  # def print_person
-  #   @persons = read_data('./storage/person.json')
-  #   puts 'There are no people in the list' if @persons.empty?
-  #   @persons.each_with_index do |person, index|
-  #     puts "#{index} - #{person['class']} Name: #{person['name']}, ID: #{person['id']}, Age: #{person['age']}"
-  #   end
-  # end
   def print_person
     json_data = read_data('./storage/person.json')
     @persons = JSON.parse(json_data)
@@ -112,18 +69,6 @@ class App
       end
     end
   end
-
-
-  # def print_person
-  #   @persons = read_data('./storage/person.json')
-  #   @persons.each do |person|
-  #     if person.is_a?(Student)
-  #       puts "Student Name: #{person.name}, Age: #{person.age}, id: #{person.id}"
-  #     elsif person.is_a?(Teacher)
-  #       puts "Teacher Name: #{person.name}, Age: #{person.age}, id: #{person.id}"
-  #     end
-  #   end
-  # end
 
   def create_book
     print 'Title: '
@@ -141,50 +86,65 @@ class App
     json_data = read_data('./storage/book.json')
     @books = JSON.parse(json_data)
     puts 'Book list is empty! Add a book.' if @books.empty?
-    @books.map do |book|
-      puts %(Title: "#{book['title']}", Author: #{book['author']})
+    @books.each_with_index do |book, index|
+      puts "#{index}) Title: \"#{book['title']}\", Author: #{book['author']}"
     end
   end
 
-  def create_rental
-    puts 'Select a book from the following list by number:'
-    @books.each_with_index { |book, index| puts %(#{index}\) Title: "#{book.title}", Author: #{book.author}) }
+  def select_book
+    list_books
+    puts 'Select a book index from the above list by number: '
     book_index = gets.chomp.to_i
+    @books[book_index]
+  end
 
-    @persons.each_with_index do |person, index|
-      puts "#{index}) [#{person.class.name}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
-    end
+  def select_person
+    print_person
+    puts 'Select a person index from the above list by number: '
     person_index = gets.chomp.to_i
+    @persons[person_index]
+  end
 
-    print 'Date: '
-    date = gets.chomp.to_i
+  def create_rental
+    rented_book = select_book
+    renter = select_person
+    puts 'Enter a date as (YYYY-MM-DD): '
+    date = gets.chomp
 
-    @rentals << Rental.new(date, @books[book_index], @persons[person_index])
+    @rentals.push Rental.new(date, rented_book, renter)
     write_data(@rentals, './storage/rental.json')
-    puts 'Rental created sucessfully'
+    puts 'Rental created successfully'
   end
 
   def list_rentals
     json_data = read_data('./storage/rental.json')
     @rentals = JSON.parse(json_data)
-    puts "\n"
-    if @rentals.empty?
-      puts 'No rent is registered in the library'
-    else
-      puts 'Select a person form the following list by ID'
-      @persons.each do |person|
-        puts "ID : #{person.id} => #{person.name}"
-      end
-      puts "
+    print_person
+    puts 'Enter ID of person: '
+    renter_id = gets.chomp.to_i
 
-    Enter person's ID :"
-      person = gets.chomp
-      puts "\n"
-      @rentals.each do |rental|
-        if rental.person.id.to_i == person.to_i
-          puts "Date : #{rental.date}, Book \"#{rental.book.title}\" by : #{rental.book.author}"
+    if rentals_empty?
+      puts 'Rental is empty'
+    else
+      rentals_for_person = @rentals.select do |rental|
+        rental_for_person?(rental, renter_id)
+      end
+
+      if rentals_for_person.empty?
+        puts 'No rentals found for the given person'
+      else
+        rentals_for_person.each do |rental|
+          puts "Rental date: #{rental['date']}, Book: #{rental['book']['title']} by #{rental['book']['author']}"
         end
       end
     end
+  end
+
+  def rentals_empty?
+    @rentals.nil? || @rentals.empty?
+  end
+
+  def rental_for_person?(rental, renter_id)
+    rental['person'] && rental['person']['id'] == renter_id && rental['book']
   end
 end
