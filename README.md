@@ -76,7 +76,7 @@ Clone this repository to your desired folder:
 
 ```sh
   cd my-folder
-  git clone https://github.com/ambrose-kibet/OOP-school-library.git
+  git clone https://github.com/obed300/oop-school-library.git
 ```
 
 ### Install
